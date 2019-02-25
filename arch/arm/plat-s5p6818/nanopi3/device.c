@@ -683,18 +683,87 @@ static struct platform_device spdif_trans_dai = {
 };
 #endif
 
+#if defined(CONFIG_SND_CODEC_ES8396) || defined(CONFIG_SND_CODEC_ES8396_MODULE)
+#define ES8396_I2C_BUS          (0)
+#endif
+
 #if defined(CONFIG_SND_CODEC_ES8316) || defined(CONFIG_SND_CODEC_ES8316_MODULE)
 #define	ES8316_I2C_BUS		(0)
+#endif
 
+#if defined(CONFIG_SND_CODEC_ES7243) || defined(CONFIG_SND_CODEC_ES7243_MODULE)
+#define	ES7243_I2C_BUS		(0)
+#endif
+
+#if defined(CONFIG_SND_CODEC_ES7210) || defined(CONFIG_SND_CODEC_ES7210_MODULE)
+#define	ES7210_I2C_BUS		(0)
+#endif
+
+#if defined(CONFIG_SND_CODEC_ES8374) || defined(CONFIG_SND_CODEC_ES8374_MODULE)
+#define ES8374_I2C_BUS          (0)
+#endif
+
+#if defined(CONFIG_SND_CODEC_ES8311) || defined(CONFIG_SND_CODEC_ES8311_MODULE)
+#define ES8311_I2C_BUS          (0)
+#endif
+
+
+#if defined(CONFIG_SND_CODEC_ES8316) || defined(CONFIG_SND_CODEC_ES8316_MODULE) || \
+	defined(CONFIG_SND_CODEC_ES7243) || defined(CONFIG_SND_CODEC_ES7243_MODULE) || \
+	defined(CONFIG_SND_CODEC_ES7210) || defined(CONFIG_SND_CODEC_ES7210_MODULE) || \
+	defined(CONFIG_SND_CODEC_ES8396) || defined(CONFIG_SND_CODEC_ES8396_MODULE) || \
+	defined(CONFIG_SND_CODEC_ES8374) || defined(CONFIG_SND_CODEC_ES8374_MODULE) || \
+	defined(CONFIG_SND_CODEC_ES8311) || defined(CONFIG_SND_CODEC_ES8311_MODULE)
 /* CODEC */
+static struct i2c_board_info __initdata es8396_i2c_bdi = {
+        .type   = "es8396",
+        .addr   = (0x22>>1),            // 0x11 (7BIT), 0x22(8BIT)
+};
+static struct i2c_board_info __initdata es8374_i2c_bdi = {
+        .type   = "es8374",
+        .addr   = (0x20>>1),            // 0x11 (7BIT), 0x22(8BIT)
+};
+static struct i2c_board_info __initdata es8311_i2c_bdi = {
+        .type   = "es8311",
+        .addr   = (0x30>>1),            // 0x11 (7BIT), 0x22(8BIT)
+};
 static struct i2c_board_info __initdata es8316_i2c_bdi = {
 	.type	= "es8316",
 	.addr	= (0x22>>1),		// 0x11 (7BIT), 0x22(8BIT)
 };
 
+static struct i2c_board_info __initdata es7243_i2c_bdi = {
+        .type   = "es7243",
+        .addr   = (0x24>>1),            // 0x11 (7BIT), 0x22(8BIT)
+};
+
+static struct i2c_board_info __initdata es7210_i2c_bdi = {
+        .type   = "es7210",
+        .addr   = (0x40>>1),            // 0x11 (7BIT), 0x22(8BIT)
+};
+
+
 /* DAI */
 struct nxp_snd_dai_plat_data i2s_dai_data = {
+#if defined(CONFIG_SND_CODEC_ES8316) || defined(CONFIG_SND_CODEC_ES8316_MODULE)
 	.i2s_ch	= 0,
+#endif
+#if defined(CONFIG_SND_CODEC_ES7243) || defined(CONFIG_SND_CODEC_ES7243_MODULE)
+	.i2s_ch = 1,
+#endif
+#if defined(CONFIG_SND_CODEC_ES7210) || defined(CONFIG_SND_CODEC_ES7210_MODULE)
+	.i2s_ch = 1,
+#endif
+#if defined(CONFIG_SND_CODEC_ES8396) || defined(CONFIG_SND_CODEC_ES8396_MODULE)
+	.i2s_ch = 1,
+#endif
+#if defined(CONFIG_SND_CODEC_ES8374) || defined(CONFIG_SND_CODEC_ES8374_MODULE)
+        .i2s_ch = 1,
+#endif
+#if defined(CONFIG_SND_CODEC_ES8311) || defined(CONFIG_SND_CODEC_ES8311_MODULE)
+        .i2s_ch = 1,
+#endif
+
 	.sample_rate	= 48000,
 	.pcm_format = SNDRV_PCM_FMTBIT_S16_LE,
 #if 1
@@ -713,6 +782,46 @@ static struct platform_device es8316_dai = {
 		.platform_data	= &i2s_dai_data,
 	}
 };
+static struct platform_device es8374_dai = {
+        .name                   = "es8374-audio",
+        .id                             = 0,
+        .dev                    = {
+                .platform_data  = &i2s_dai_data,
+        }
+};
+static struct platform_device es8311_dai = {
+        .name                   = "es8311-audio",
+        .id                             = 0,
+        .dev                    = {
+                .platform_data  = &i2s_dai_data,
+        }
+};
+
+static struct platform_device es7210_dai = {
+        .name                   = "es7210-audio",
+        .id                             = 0,
+        .dev                    = {
+                .platform_data  = &i2s_dai_data,
+        }
+};
+
+static struct platform_device es7243_dai = {
+        .name                   = "es7243-audio",
+        .id                             = 0,
+        .dev                    = {
+                .platform_data  = &i2s_dai_data,
+        }
+};
+static struct platform_device es8396_dai = {
+        .name                   = "es8396-audio",
+        .id                             = 0,
+        .dev                    = {
+                .platform_data  = &i2s_dai_data,
+        }
+
+};
+
+
 #endif
 
 /*------------------------------------------------------------------------------
@@ -1873,6 +1982,17 @@ void __init nxp_board_devs_register(void)
 	platform_device_register(&spdif_trans_dai);
 #endif
 
+#if defined(CONFIG_SND_CODEC_ES8396) || defined(CONFIG_SND_CODEC_ES8396_MODULE)
+        if (board_with_es8396()) {
+                printk("plat: add device asoc-es8396\n");
+                if (board_is_nanopc() || board_is_som6818() || \
+                        board_is_t3trunk() || board_is_smart6818())
+                        i2s_dai_data.hp_jack.support = 1;
+                i2c_register_board_info(ES8396_I2C_BUS, &es8396_i2c_bdi, 1);
+                platform_device_register(&es8396_dai);
+        }
+#endif
+
 #if defined(CONFIG_SND_CODEC_ES8316) || defined(CONFIG_SND_CODEC_ES8316_MODULE)
 	if (board_with_es8316()) {
 		printk("plat: add device asoc-es8316\n");
@@ -1882,6 +2002,52 @@ void __init nxp_board_devs_register(void)
 		i2c_register_board_info(ES8316_I2C_BUS, &es8316_i2c_bdi, 1);
 		platform_device_register(&es8316_dai);
 	}
+#endif
+
+#if defined(CONFIG_SND_CODEC_ES8374) || defined(CONFIG_SND_CODEC_ES8374_MODULE)
+        if (board_with_es8374()) {
+                printk("plat: add device asoc-es8374\n");
+                if (board_is_nanopc() || board_is_som6818() || \
+                        board_is_t3trunk() || board_is_smart6818())
+                        i2s_dai_data.hp_jack.support = 1;
+                i2c_register_board_info(ES8374_I2C_BUS, &es8374_i2c_bdi, 1);
+                platform_device_register(&es8374_dai);
+        }
+#endif
+
+#if defined(CONFIG_SND_CODEC_ES8311) || defined(CONFIG_SND_CODEC_ES8311_MODULE)
+        if (board_with_es8311()) {
+                printk("plat: add device asoc-es8311\n");
+                if (board_is_nanopc() || board_is_som6818() || \
+                        board_is_t3trunk() || board_is_smart6818())
+                        i2s_dai_data.hp_jack.support = 1;
+                i2c_register_board_info(ES8311_I2C_BUS, &es8311_i2c_bdi, 1);
+                platform_device_register(&es8311_dai);
+        }
+#endif
+
+
+
+#if defined(CONFIG_SND_CODEC_ES7210) || defined(CONFIG_SND_CODEC_ES7210_MODULE)
+        if (board_with_es7210()) {
+                printk("plat: add device asoc-es7210\n");
+                if (board_is_nanopc() || board_is_som6818() || \
+                        board_is_t3trunk() || board_is_smart6818())
+                        i2s_dai_data.hp_jack.support = 1;
+                i2c_register_board_info(ES7210_I2C_BUS, &es7210_i2c_bdi, 1);
+                platform_device_register(&es7210_dai);
+        }
+#endif
+
+#if defined(CONFIG_SND_CODEC_ES7243) || defined(CONFIG_SND_CODEC_ES7243_MODULE)
+        if (board_with_es7243()) {
+                printk("plat: add device asoc-es7243\n");
+                if (board_is_nanopc() || board_is_som6818() || \
+                        board_is_t3trunk() || board_is_smart6818())
+                        i2s_dai_data.hp_jack.support = 1;
+                i2c_register_board_info(ES7243_I2C_BUS, &es7243_i2c_bdi, 1);
+                platform_device_register(&es7243_dai);
+        }
 #endif
 
 #if defined(CONFIG_V4L2_NXP) || defined(CONFIG_V4L2_NXP_MODULE)

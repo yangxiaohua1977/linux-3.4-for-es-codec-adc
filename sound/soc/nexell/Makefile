@@ -16,7 +16,12 @@ nxp-snd-pdm-objs					:= nxp-pdm.o
 
 obj-$(CONFIG_SND_CODEC_NULL) 		+= nxp-snd-null.o
 obj-$(CONFIG_SND_CODEC_RT5631)		+= nxp-snd-rt5631.o
+obj-$(CONFIG_SND_CODEC_ES8396)		+= nxp-snd-es8396.o
 obj-$(CONFIG_SND_CODEC_ES8316)		+= nxp-snd-es8316.o
+obj-$(CONFIG_SND_CODEC_ES8374)		+= nxp-snd-es8374.o
+obj-$(CONFIG_SND_CODEC_ES8311)		+= nxp-snd-es8311.o
+obj-$(CONFIG_SND_CODEC_ES7210)		+= nxp-snd-es7210.o
+obj-$(CONFIG_SND_CODEC_ES7243)		+= nxp-snd-es7243.o
 obj-$(CONFIG_SND_CODEC_ALC5623)     += nxp-snd-rt5623.o
 obj-$(CONFIG_SND_CODEC_ALC5633)		+= nxp-snd-alc5633.o
 obj-$(CONFIG_SND_CODEC_WM8976)		+= nxp-snd-wm8976.o
@@ -28,7 +33,12 @@ obj-$(CONFIG_SND_PDM_REC)			+= nxp-snd-pdm-record.o
 
 nxp-snd-null-objs 					:= nxp-null.o
 nxp-snd-rt5631-objs 				:= nxp-rt5631.o
+nxp-snd-es8396-objs 				:= nxp-es8396.o
 nxp-snd-es8316-objs 				:= nxp-es8316.o
+nxp-snd-es8374-objs 				:= nxp-es8374.o
+nxp-snd-es8311-objs 				:= nxp-es8311.o
+nxp-snd-es7210-objs 				:= nxp-es7210.o
+nxp-snd-es7243-objs 				:= nxp-es7243.o
 nxp-snd-rt5623-objs                 := nxp-rt5623.o
 nxp-snd-alc5633-objs 				:= nxp-alc5633.o
 nxp-snd-wm8976-objs 				:= nxp-wm8978.o
