@@ -77,6 +77,10 @@ static inline int board_with_es7243(void) {
                         board_is_t3trunk() || board_is_smart6818());
 }
 
+static inline int board_with_es7243e(void) {
+        return (board_is_nanopc() || board_is_M3() || board_is_som6818() ||
+                        board_is_t3trunk() || board_is_smart6818());
+}
 static inline int board_with_gmac_eth(void) {
 	return 1;
 }

@@ -695,6 +695,10 @@ static struct platform_device spdif_trans_dai = {
 #define	ES7243_I2C_BUS		(0)
 #endif
 
+#if defined(CONFIG_SND_CODEC_ES7243E) || defined(CONFIG_SND_CODEC_ES7243E_MODULE)
+#define	ES7243E_I2C_BUS		(0)
+#endif
+
 #if defined(CONFIG_SND_CODEC_ES7210) || defined(CONFIG_SND_CODEC_ES7210_MODULE)
 #define	ES7210_I2C_BUS		(0)
 #endif
@@ -710,6 +714,7 @@ static struct platform_device spdif_trans_dai = {
 
 #if defined(CONFIG_SND_CODEC_ES8316) || defined(CONFIG_SND_CODEC_ES8316_MODULE) || \
 	defined(CONFIG_SND_CODEC_ES7243) || defined(CONFIG_SND_CODEC_ES7243_MODULE) || \
+	defined(CONFIG_SND_CODEC_ES7243E) || defined(CONFIG_SND_CODEC_ES7243E_MODULE) || \
 	defined(CONFIG_SND_CODEC_ES7210) || defined(CONFIG_SND_CODEC_ES7210_MODULE) || \
 	defined(CONFIG_SND_CODEC_ES8396) || defined(CONFIG_SND_CODEC_ES8396_MODULE) || \
 	defined(CONFIG_SND_CODEC_ES8374) || defined(CONFIG_SND_CODEC_ES8374_MODULE) || \
@@ -737,6 +742,15 @@ static struct i2c_board_info __initdata es7243_i2c_bdi = {
         .addr   = (0x24>>1),            // 0x11 (7BIT), 0x22(8BIT)
 };
 
+static struct i2c_board_info __initdata es7243e_i2c_bdi = {
+        .type   = "es7243e",
+        .addr   = (0x26>>1),            // 0x11 (7BIT), 0x22(8BIT)
+};
+
+static struct i2c_board_info __initdata es7243e_1_i2c_bdi = {
+        .type   = "es7243e_1",
+        .addr   = (0x24>>1),            // 0x11 (7BIT), 0x22(8BIT)
+};
 static struct i2c_board_info __initdata es7210_i2c_bdi = {
         .type   = "es7210",
         .addr   = (0x40>>1),            // 0x11 (7BIT), 0x22(8BIT)
@@ -749,6 +763,9 @@ struct nxp_snd_dai_plat_data i2s_dai_data = {
 	.i2s_ch	= 0,
 #endif
 #if defined(CONFIG_SND_CODEC_ES7243) || defined(CONFIG_SND_CODEC_ES7243_MODULE)
+	.i2s_ch = 1,
+#endif
+#if defined(CONFIG_SND_CODEC_ES7243E) || defined(CONFIG_SND_CODEC_ES7243E_MODULE)
 	.i2s_ch = 1,
 #endif
 #if defined(CONFIG_SND_CODEC_ES7210) || defined(CONFIG_SND_CODEC_ES7210_MODULE)
@@ -807,6 +824,13 @@ static struct platform_device es7210_dai = {
 
 static struct platform_device es7243_dai = {
         .name                   = "es7243-audio",
+        .id                             = 0,
+        .dev                    = {
+                .platform_data  = &i2s_dai_data,
+        }
+};
+static struct platform_device es7243e_dai = {
+        .name                   = "es7243e-audio",
         .id                             = 0,
         .dev                    = {
                 .platform_data  = &i2s_dai_data,
@@ -2047,6 +2071,18 @@ void __init nxp_board_devs_register(void)
                         i2s_dai_data.hp_jack.support = 1;
                 i2c_register_board_info(ES7243_I2C_BUS, &es7243_i2c_bdi, 1);
                 platform_device_register(&es7243_dai);
+        }
+#endif
+
+#if defined(CONFIG_SND_CODEC_ES7243E) || defined(CONFIG_SND_CODEC_ES7243E_MODULE)
+        if (board_with_es7243e()) {
+                printk("plat: add device asoc-es7243\n");
+                if (board_is_nanopc() || board_is_som6818() || \
+                        board_is_t3trunk() || board_is_smart6818())
+                        i2s_dai_data.hp_jack.support = 1;
+                i2c_register_board_info(ES7243E_I2C_BUS, &es7243e_i2c_bdi, 1);
+                i2c_register_board_info(ES7243E_I2C_BUS, &es7243e_1_i2c_bdi, 1);
+                platform_device_register(&es7243e_dai);
         }
 #endif
 
